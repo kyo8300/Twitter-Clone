@@ -1,5 +1,6 @@
 import express from 'express'
 import { ApolloServer } from 'apollo-server-express'
+// helmet
 
 import typeDefs from './schema'
 import resolvers from './resolvers'
@@ -7,7 +8,10 @@ import resolvers from './resolvers'
 const app = express()
 const PORT = 4000
 
-const server = new ApolloServer({ typeDefs, resolvers })
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+})
 
 server.applyMiddleware({ app })
 
