@@ -13,7 +13,11 @@ const resolvers: Resolvers = {
     },
   },
   Mutation: {
-    signin: async (_, { SigninInfo, password }): Promise<ReturnResult> => {
+    signin: async (
+      _,
+      { SigninInfo, password },
+      { session }
+    ): Promise<ReturnResult> => {
       if (SigninInfo) {
         const { phoneNumber, birth, username } = SigninInfo
         const user = Users.some((user) => user.phoneNumber === phoneNumber)
@@ -41,6 +45,8 @@ const resolvers: Resolvers = {
         }
 
         Users.unshift(newUser)
+
+        session.userId = id
 
         return newUser
       } else {
