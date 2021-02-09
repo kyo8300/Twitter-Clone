@@ -1,6 +1,6 @@
-// import { Response } from 'express'
+import { Response } from 'express'
 
 export interface Ctx {
-  //   res: Response
+  res: Response
   session: CookieSessionInterfaces.CookieSessionObject
 }

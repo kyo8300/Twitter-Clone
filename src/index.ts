@@ -19,7 +19,7 @@ app.use(
     // Cookie Options
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
     sameSite: 'lax',
-    domain: 'http://localhost:3000',
+    domain: 'localhost',
     // secure: true
   })
 )
@@ -27,7 +27,9 @@ app.use(
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => ({ session: req.session }),
+  context: ({ req, res }) => {
+    return { session: req.session, res }
+  },
 })
 
 server.applyMiddleware({ app })

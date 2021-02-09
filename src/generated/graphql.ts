@@ -95,13 +95,13 @@ export type Mutation = {
 
 
 export type MutationLoginArgs = {
-  loginInfo?: Maybe<LoginInfo>;
+  LoginInfo: LoginInfo;
   password: Scalars['String'];
 };
 
 
 export type MutationSigninArgs = {
-  SigninInfo?: Maybe<SigninInfo>;
+  SigninInfo: SigninInfo;
   password: Scalars['String'];
 };
 
@@ -293,8 +293,8 @@ export type QueryResolvers<ContextType = Ctx, ParentType extends ResolversParent
 }>;
 
 export type MutationResolvers<ContextType = Ctx, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
-  login?: Resolver<Maybe<ResolversTypes['ReturnResult']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'password'>>;
-  signin?: Resolver<Maybe<ResolversTypes['ReturnResult']>, ParentType, ContextType, RequireFields<MutationSigninArgs, 'password'>>;
+  login?: Resolver<Maybe<ResolversTypes['ReturnResult']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'LoginInfo' | 'password'>>;
+  signin?: Resolver<Maybe<ResolversTypes['ReturnResult']>, ParentType, ContextType, RequireFields<MutationSigninArgs, 'SigninInfo' | 'password'>>;
 }>;
 
 export type Resolvers<ContextType = Ctx> = ResolversObject<{
