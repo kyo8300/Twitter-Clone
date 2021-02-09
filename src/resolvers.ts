@@ -83,6 +83,23 @@ const resolvers: Resolvers = {
 
       return newUser
     },
+    logout: (_, __, { session, res }) => {
+      if (!session.userId) return false
+
+      res.clearCookie('userId', {
+        maxAge: -1,
+        domain: 'localhost',
+        path: '/',
+      })
+
+      res.clearCookie('userId.sig', {
+        maxAge: -1,
+        domain: 'localhost',
+        path: '/',
+      })
+
+      return true
+    },
   },
 }
 

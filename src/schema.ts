@@ -82,6 +82,7 @@ const typeDefs = gql`
   type Mutation {
     login(LoginInfo: LoginInfo!, password: String!): ReturnResult
     signin(SigninInfo: SigninInfo!, password: String!): ReturnResult
+    logout: Boolean
   }
 
   # Input types

@@ -14,6 +14,7 @@ const PORT = 4000
 
 app.use(
   cookieSession({
+    name: 'userId',
     keys: [process.env.KEY1 as string, process.env.KEY2 as string],
 
     // Cookie Options

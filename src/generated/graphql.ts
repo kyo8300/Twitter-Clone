@@ -91,6 +91,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   login?: Maybe<ReturnResult>;
   signin?: Maybe<ReturnResult>;
+  logout?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -295,6 +296,7 @@ export type QueryResolvers<ContextType = Ctx, ParentType extends ResolversParent
 export type MutationResolvers<ContextType = Ctx, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   login?: Resolver<Maybe<ResolversTypes['ReturnResult']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'LoginInfo' | 'password'>>;
   signin?: Resolver<Maybe<ResolversTypes['ReturnResult']>, ParentType, ContextType, RequireFields<MutationSigninArgs, 'SigninInfo' | 'password'>>;
+  logout?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
 }>;
 
 export type Resolvers<ContextType = Ctx> = ResolversObject<{
