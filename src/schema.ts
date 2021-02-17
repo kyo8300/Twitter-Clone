@@ -1,23 +1,32 @@
 import { gql } from 'apollo-server-express'
-import { GraphQLScalarType, Kind } from 'graphql'
+import {
+  GraphQLScalarType,
+  GraphQLScalarTypeConfig,
+  Kind,
+  ValueNode,
+} from 'graphql'
 
 // Custom Scalar
-new GraphQLScalarType({
+const config: GraphQLScalarTypeConfig<Date | number, number> = {
   name: 'Date',
   description: 'Date custom scalar type',
-  serialize(value) {
+  serialize(value: Date) {
+    console.log('serialize: ', value)
     return value.getTime() // Convert outgoing Date to integer for JSON
   },
-  parseValue(value) {
+  parseValue(value: number) {
+    console.log('parseValue: ', value)
     return new Date(value) // Convert incoming integer to Date
   },
-  parseLiteral(ast) {
+  parseLiteral(ast: ValueNode) {
     if (ast.kind === Kind.INT) {
       return parseInt(ast.value, 10) // Convert hard-coded AST string to type expected by parseValue
     }
     return null // Invalid hard-coded value (not an integer)
   },
-})
+}
+
+export const dateScalar = new GraphQLScalarType(config)
 
 const typeDefs = gql`
   scalar Date

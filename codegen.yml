@@ -9,3 +9,5 @@ generates:
     config:
       useIndexSignature: true
       contextType: ../types#Ctx
+      scalars:
+        Date: Date

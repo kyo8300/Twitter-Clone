@@ -1,10 +1,12 @@
 import { Resolvers, ReturnResult, User } from './generated/graphql'
 import argon2 from 'argon2'
 import { v4 as uuidv4 } from 'uuid'
+import { dateScalar } from './schema'
 
 const Users: User[] = []
 
 const resolvers: Resolvers = {
+  Date: dateScalar,
   ReturnResult: {
     __resolveType(obj: ReturnResult): 'User' | 'ErrorHandler' | null {
       if ('username' in obj) return 'User'
@@ -85,6 +87,8 @@ const resolvers: Resolvers = {
     },
     logout: (_, __, { session, res }) => {
       if (!session.userId) return false
+
+      session.userId = null
 
       res.clearCookie('userId', {
         maxAge: -1,
