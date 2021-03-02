@@ -1,11 +1,11 @@
-import { Resolvers, ReturnResult, User } from './generated/graphql'
+import { Resolvers, ReturnResult, User } from '../generated/graphql'
 import argon2 from 'argon2'
 import { v4 as uuidv4 } from 'uuid'
-import { dateScalar } from './schema'
+import { dateScalar } from '../schema'
 
 const Users: User[] = []
 
-const resolvers: Resolvers = {
+const auth: Resolvers = {
   Date: dateScalar,
   ReturnResult: {
     __resolveType(obj: ReturnResult): 'User' | 'ErrorHandler' | null {
@@ -113,4 +113,4 @@ const resolvers: Resolvers = {
   },
 }
 
-export default resolvers
+export default auth

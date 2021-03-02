@@ -2,10 +2,11 @@ import express from 'express'
 import dotenv from 'dotenv'
 import { ApolloServer } from 'apollo-server-express'
 import cookieSession from 'cookie-session'
+import { mergeResolvers } from '@graphql-tools/merge'
 // helmet
 
 import typeDefs from './schema'
-import resolvers from './resolvers'
+import auth from './resolvers/auth'
 
 dotenv.config()
 
@@ -27,7 +28,7 @@ app.use(
 
 const server = new ApolloServer({
   typeDefs,
-  resolvers,
+  resolvers: mergeResolvers([auth]),
   context: ({ req, res }) => {
     return { session: req.session, res }
   },
