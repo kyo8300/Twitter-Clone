@@ -14,6 +14,14 @@ const resolvers: Resolvers = {
       return null
     },
   },
+  Query: {
+    me: (_, __, { session }) => {
+      if (!session.userId) return null
+
+      const user = Users.find((user) => user.id === session.userId)
+      return user ? user : null
+    },
+  },
   Mutation: {
     login: async (_, { LoginInfo, password }, { session }) => {
       if (session.userId) return { message: 'You already logged in' }
@@ -87,8 +95,6 @@ const resolvers: Resolvers = {
     },
     logout: (_, __, { session, res }) => {
       if (!session.userId) return false
-
-      session.userId = null
 
       res.clearCookie('userId', {
         maxAge: -1,
