@@ -1,4 +1,5 @@
 import { Response } from 'express'
+import { User } from 'generated/graphql'
 
 interface SessionType extends CookieSessionInterfaces.CookieSessionObject {
   userId: string | null
@@ -7,4 +8,5 @@ interface SessionType extends CookieSessionInterfaces.CookieSessionObject {
 export interface Ctx {
   res: Response
   session: SessionType
+  Users: User[]
 }

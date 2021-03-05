@@ -1,21 +1,17 @@
-import { Resolvers, ReturnResult, User } from '../generated/graphql'
+import { Resolvers, UserResult, User } from '../generated/graphql'
 import argon2 from 'argon2'
 import { v4 as uuidv4 } from 'uuid'
-import { dateScalar } from '../schema'
-
-const Users: User[] = []
 
 const auth: Resolvers = {
-  Date: dateScalar,
-  ReturnResult: {
-    __resolveType(obj: ReturnResult): 'User' | 'ErrorHandler' | null {
+  UserResult: {
+    __resolveType(obj: UserResult): 'User' | 'ErrorHandler' | null {
       if ('username' in obj) return 'User'
       if ('message' in obj) return 'ErrorHandler'
       return null
     },
   },
   Query: {
-    me: (_, __, { session }) => {
+    me: (_, __, { session, Users }) => {
       if (!session.userId) return null
 
       const user = Users.find((user) => user.id === session.userId)
@@ -23,7 +19,7 @@ const auth: Resolvers = {
     },
   },
   Mutation: {
-    login: async (_, { LoginInfo, password }, { session }) => {
+    login: async (_, { LoginInfo, password }, { session, Users }) => {
       if (session.userId) return { message: 'You already logged in' }
 
       const { username, email, phoneNumber } = LoginInfo
@@ -60,8 +56,8 @@ const auth: Resolvers = {
     signin: async (
       _,
       { SigninInfo, password },
-      { session }
-    ): Promise<ReturnResult> => {
+      { session, Users }
+    ): Promise<UserResult> => {
       const { phoneNumber, birth, username } = SigninInfo
       const user = Users.some((user) => user.phoneNumber === phoneNumber)
       if (user) {

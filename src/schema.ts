@@ -37,8 +37,9 @@ const typeDefs = gql`
     texts: String
     media: String
     likes: Int
-    retweets: Int
+    retweets: [String]!
     replys: [Tweet]
+    userId: String!
     created_at: Date!
   }
 
@@ -59,8 +60,6 @@ const typeDefs = gql`
     bio: String
     profileImage: String
     headerImage: String
-    token: String
-    tweets: [Tweet]
     likes: [Tweet]
     following: [User]
     followers: [User]
@@ -74,24 +73,29 @@ const typeDefs = gql`
     message: String!
   }
 
-  union ReturnResult = User | ErrorHandler
+  union UserResult = User | ErrorHandler
+  union TweetResult = Tweet | ErrorHandler
 
   # =========================
 
   # ======== Query =========
   type Query {
-    tweets(followingIds: [ID]!): Tweet
-    tweet(id: ID!): Tweet
     getUser(id: ID!): User
     me: User
+
+    tweets(followingIds: [ID]!): [Tweet]
+    tweet(id: ID!): Tweet
   }
   # ========================
 
   # ======== Mutation =========
   type Mutation {
-    login(LoginInfo: LoginInfo!, password: String!): ReturnResult
-    signin(SigninInfo: SigninInfo!, password: String!): ReturnResult
+    login(LoginInfo: LoginInfo!, password: String!): UserResult
+    signin(SigninInfo: SigninInfo!, password: String!): UserResult
     logout: Boolean
+
+    tweet(texts: String, media: String): TweetResult
+    retweet(id: ID!): Boolean
   }
 
   # Input types

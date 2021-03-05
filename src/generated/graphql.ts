@@ -22,8 +22,9 @@ export type Tweet = {
   texts?: Maybe<Scalars['String']>;
   media?: Maybe<Scalars['String']>;
   likes?: Maybe<Scalars['Int']>;
-  retweets?: Maybe<Scalars['Int']>;
+  retweets: Array<Maybe<Scalars['String']>>;
   replys?: Maybe<Array<Maybe<Tweet>>>;
+  userId: Scalars['String'];
   created_at: Scalars['Date'];
 };
 
@@ -46,8 +47,6 @@ export type User = {
   bio?: Maybe<Scalars['String']>;
   profileImage?: Maybe<Scalars['String']>;
   headerImage?: Maybe<Scalars['String']>;
-  token?: Maybe<Scalars['String']>;
-  tweets?: Maybe<Array<Maybe<Tweet>>>;
   likes?: Maybe<Array<Maybe<Tweet>>>;
   following?: Maybe<Array<Maybe<User>>>;
   followers?: Maybe<Array<Maybe<User>>>;
@@ -62,14 +61,21 @@ export type ErrorHandler = {
   message: Scalars['String'];
 };
 
-export type ReturnResult = User | ErrorHandler;
+export type UserResult = User | ErrorHandler;
+
+export type TweetResult = Tweet | ErrorHandler;
 
 export type Query = {
   __typename?: 'Query';
-  tweets?: Maybe<Tweet>;
-  tweet?: Maybe<Tweet>;
   getUser?: Maybe<User>;
   me?: Maybe<User>;
+  tweets?: Maybe<Array<Maybe<Tweet>>>;
+  tweet?: Maybe<Tweet>;
+};
+
+
+export type QueryGetUserArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -82,16 +88,13 @@ export type QueryTweetArgs = {
   id: Scalars['ID'];
 };
 
-
-export type QueryGetUserArgs = {
-  id: Scalars['ID'];
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
-  login?: Maybe<ReturnResult>;
-  signin?: Maybe<ReturnResult>;
+  login?: Maybe<UserResult>;
+  signin?: Maybe<UserResult>;
   logout?: Maybe<Scalars['Boolean']>;
+  tweet?: Maybe<TweetResult>;
+  retweet?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -104,6 +107,17 @@ export type MutationLoginArgs = {
 export type MutationSigninArgs = {
   SigninInfo: SigninInfo;
   password: Scalars['String'];
+};
+
+
+export type MutationTweetArgs = {
+  texts?: Maybe<Scalars['String']>;
+  media?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationRetweetArgs = {
+  id: Scalars['ID'];
 };
 
 export type LoginInfo = {
@@ -207,7 +221,8 @@ export type ResolversTypes = ResolversObject<{
   User: ResolverTypeWrapper<User>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   ErrorHandler: ResolverTypeWrapper<ErrorHandler>;
-  ReturnResult: ResolversTypes['User'] | ResolversTypes['ErrorHandler'];
+  UserResult: ResolversTypes['User'] | ResolversTypes['ErrorHandler'];
+  TweetResult: ResolversTypes['Tweet'] | ResolversTypes['ErrorHandler'];
   Query: ResolverTypeWrapper<{}>;
   Mutation: ResolverTypeWrapper<{}>;
   LoginInfo: LoginInfo;
@@ -225,7 +240,8 @@ export type ResolversParentTypes = ResolversObject<{
   User: User;
   Boolean: Scalars['Boolean'];
   ErrorHandler: ErrorHandler;
-  ReturnResult: ResolversParentTypes['User'] | ResolversParentTypes['ErrorHandler'];
+  UserResult: ResolversParentTypes['User'] | ResolversParentTypes['ErrorHandler'];
+  TweetResult: ResolversParentTypes['Tweet'] | ResolversParentTypes['ErrorHandler'];
   Query: {};
   Mutation: {};
   LoginInfo: LoginInfo;
@@ -241,8 +257,9 @@ export type TweetResolvers<ContextType = Ctx, ParentType extends ResolversParent
   texts?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   media?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   likes?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  retweets?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  retweets?: Resolver<Array<Maybe<ResolversTypes['String']>>, ParentType, ContextType>;
   replys?: Resolver<Maybe<Array<Maybe<ResolversTypes['Tweet']>>>, ParentType, ContextType>;
+  userId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -265,8 +282,6 @@ export type UserResolvers<ContextType = Ctx, ParentType extends ResolversParentT
   bio?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   profileImage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   headerImage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  token?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  tweets?: Resolver<Maybe<Array<Maybe<ResolversTypes['Tweet']>>>, ParentType, ContextType>;
   likes?: Resolver<Maybe<Array<Maybe<ResolversTypes['Tweet']>>>, ParentType, ContextType>;
   following?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
   followers?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
@@ -282,21 +297,27 @@ export type ErrorHandlerResolvers<ContextType = Ctx, ParentType extends Resolver
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type ReturnResultResolvers<ContextType = Ctx, ParentType extends ResolversParentTypes['ReturnResult'] = ResolversParentTypes['ReturnResult']> = ResolversObject<{
+export type UserResultResolvers<ContextType = Ctx, ParentType extends ResolversParentTypes['UserResult'] = ResolversParentTypes['UserResult']> = ResolversObject<{
   __resolveType: TypeResolveFn<'User' | 'ErrorHandler', ParentType, ContextType>;
 }>;
 
+export type TweetResultResolvers<ContextType = Ctx, ParentType extends ResolversParentTypes['TweetResult'] = ResolversParentTypes['TweetResult']> = ResolversObject<{
+  __resolveType: TypeResolveFn<'Tweet' | 'ErrorHandler', ParentType, ContextType>;
+}>;
+
 export type QueryResolvers<ContextType = Ctx, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  tweets?: Resolver<Maybe<ResolversTypes['Tweet']>, ParentType, ContextType, RequireFields<QueryTweetsArgs, 'followingIds'>>;
-  tweet?: Resolver<Maybe<ResolversTypes['Tweet']>, ParentType, ContextType, RequireFields<QueryTweetArgs, 'id'>>;
   getUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryGetUserArgs, 'id'>>;
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  tweets?: Resolver<Maybe<Array<Maybe<ResolversTypes['Tweet']>>>, ParentType, ContextType, RequireFields<QueryTweetsArgs, 'followingIds'>>;
+  tweet?: Resolver<Maybe<ResolversTypes['Tweet']>, ParentType, ContextType, RequireFields<QueryTweetArgs, 'id'>>;
 }>;
 
 export type MutationResolvers<ContextType = Ctx, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
-  login?: Resolver<Maybe<ResolversTypes['ReturnResult']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'LoginInfo' | 'password'>>;
-  signin?: Resolver<Maybe<ResolversTypes['ReturnResult']>, ParentType, ContextType, RequireFields<MutationSigninArgs, 'SigninInfo' | 'password'>>;
+  login?: Resolver<Maybe<ResolversTypes['UserResult']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'LoginInfo' | 'password'>>;
+  signin?: Resolver<Maybe<ResolversTypes['UserResult']>, ParentType, ContextType, RequireFields<MutationSigninArgs, 'SigninInfo' | 'password'>>;
   logout?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  tweet?: Resolver<Maybe<ResolversTypes['TweetResult']>, ParentType, ContextType, RequireFields<MutationTweetArgs, never>>;
+  retweet?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationRetweetArgs, 'id'>>;
 }>;
 
 export type Resolvers<ContextType = Ctx> = ResolversObject<{
@@ -305,7 +326,8 @@ export type Resolvers<ContextType = Ctx> = ResolversObject<{
   DM?: DmResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   ErrorHandler?: ErrorHandlerResolvers<ContextType>;
-  ReturnResult?: ReturnResultResolvers<ContextType>;
+  UserResult?: UserResultResolvers<ContextType>;
+  TweetResult?: TweetResultResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
 }>;
