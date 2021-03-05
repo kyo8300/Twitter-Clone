@@ -2,6 +2,8 @@ import { Resolvers, UserResult, User } from '../generated/graphql'
 import argon2 from 'argon2'
 import { v4 as uuidv4 } from 'uuid'
 
+const Users: User[] = []
+
 const auth: Resolvers = {
   UserResult: {
     __resolveType(obj: UserResult): 'User' | 'ErrorHandler' | null {
@@ -11,7 +13,7 @@ const auth: Resolvers = {
     },
   },
   Query: {
-    me: (_, __, { session, Users }) => {
+    me: (_, __, { session }) => {
       if (!session.userId) return null
 
       const user = Users.find((user) => user.id === session.userId)
@@ -19,7 +21,7 @@ const auth: Resolvers = {
     },
   },
   Mutation: {
-    login: async (_, { LoginInfo, password }, { session, Users }) => {
+    login: async (_, { LoginInfo, password }, { session }) => {
       if (session.userId) return { message: 'You already logged in' }
 
       const { username, email, phoneNumber } = LoginInfo
@@ -56,7 +58,7 @@ const auth: Resolvers = {
     signin: async (
       _,
       { SigninInfo, password },
-      { session, Users }
+      { session }
     ): Promise<UserResult> => {
       const { phoneNumber, birth, username } = SigninInfo
       const user = Users.some((user) => user.phoneNumber === phoneNumber)

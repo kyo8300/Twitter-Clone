@@ -8,7 +8,6 @@ import { mergeResolvers } from '@graphql-tools/merge'
 import typeDefs from './schema'
 import auth from './resolvers/auth'
 import tweet from './resolvers/tweet'
-import { User } from './generated/graphql'
 
 dotenv.config()
 
@@ -28,8 +27,6 @@ app.use(
   })
 )
 
-const Users: User[] = []
-
 const server = new ApolloServer({
   typeDefs,
   resolvers: mergeResolvers([auth, tweet]),
@@ -37,7 +34,6 @@ const server = new ApolloServer({
     return {
       session: req.session,
       res,
-      Users,
     }
   },
 })
