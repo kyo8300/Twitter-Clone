@@ -9,7 +9,7 @@
   "scripts": {
     "watch": "tsc -W",
     "build": "tsc",
-    "devServer": "concurrently \"tsc --watch\" \"nodemon dist/index.js\"",
+    "devserver": "concurrently \"tsc --watch\" \"nodemon dist/index.js\"",
     "dev": "concurrently \"yarn devServer\" \"cd client && yarn dev\"",
     "eslint": "eslint . --ext .ts,.tsx",
     "codegen": "graphql-codegen --config codegen.yml"
