@@ -9,23 +9,12 @@ module.exports = {
       ...theme('colors'),
       blueSecondary: '#1DA1F2',
     }),
-    minHeight: {
-      0: '0',
-      '1/4': '25%',
-      '1/2': '50%',
-      '3/4': '75%',
-      full: '100%',
-      48: '3rem',
-    },
-    extend: {
-      lineHeight: {
-        small: '52.5px',
-        large: '84px',
-      },
+    screens: {
+      tablet: '500px',
+      desktop: '1000px',
     },
   },
   variants: {
     extend: {},
   },
-  plugins: [],
 }
